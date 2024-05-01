@@ -91,15 +91,21 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
             const SizedBox(height: 20),
-            if (userName != null && userLastName != null && userEmail != null)
-            const Text("Usuarios Creados",
-                style: TextStyle(fontWeight: FontWeight.bold)),
-                const SizedBox(height: 20),
-              CardWidget(
-                userName: userName!,
-                userLastName: userLastName!,
-                userEmail: userEmail!,
-              ),
+             (userName != null && userLastName != null && userEmail != null)
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text("Usuarios Creados",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 20),
+                    CardWidget(
+                      userName: userName!,
+                      userLastName: userLastName!,
+                      userEmail: userEmail!,
+                    ),
+                  ],
+                )
+              : SizedBox(),
           ],
         ),
       ),

@@ -2,7 +2,9 @@ import 'package:animate_do/animate_do.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:prueba_flutter/modules/security/login/pages/login_page.dart';
 import '../../env/theme/app_theme.dart';
+import '../helpers/global_helpers.dart';
 import '../provider/functional_provider.dart';
 import 'alert_modal.dart';
 
@@ -92,6 +94,22 @@ class _HomeLayoutWidgetState extends State<HomeLayoutWidget> {
                   borderRadius:
                       BorderRadius.vertical(bottom: Radius.circular(35)),
                 ),
+                actions: [
+                  if (fp.isAdmin || fp.isUser)
+                  IconButton(
+                    icon: Icon(Icons.logout),
+                    onPressed: () {
+                      final loginKey = GlobalHelper.genKey();
+                      fp.clearAllAlert();
+                      fp.addPage(
+                          key: loginKey,
+                          content: LoginPage(
+                            keyPage: loginKey,
+                            key: loginKey,
+                          ));
+                    },
+                  ),
+                ],
               ),
               if (widget.requiredBottonNavigatorBar!)
                 SliverFillRemaining(

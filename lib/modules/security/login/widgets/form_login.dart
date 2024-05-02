@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../../env/theme/app_theme.dart';
 import '../../../../shared/provider/auth_provider.dart';
+import '../../../../shared/provider/functional_provider.dart';
 import '../../../../shared/widget/filled_button.dart';
 import '../../../../shared/widget/placeholder.dart';
 import '../../../../shared/widget/text_form_field_widget.dart';
@@ -83,23 +85,27 @@ class _FormLoginWidgetState extends State<FormLoginWidget> {
     );
   }
 
-void _login(BuildContext context) {
-  if ((userController.text.trim() == 'admin' &&
-          passwordController.text.trim() == 'admin') ||
-      (userController.text.trim() == 'user' &&
-          passwordController.text.trim() == 'user')) {
-    AuthProvider.of(context)
-        .login(userController.text.trim(), passwordController.text.trim());
-    Navigator.pushReplacementNamed(context, '/admin');
-  } else {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Credenciales incorrectas'),
-        duration: Duration(seconds: 3),
-      ),
-    );
+  void _login(BuildContext context) {
+    if ((userController.text.trim() == 'admin' &&
+            passwordController.text.trim() == 'admin') ||
+        (userController.text.trim() == 'user' &&
+            passwordController.text.trim() == 'user')) {
+      final functionalProvider =
+          Provider.of<FunctionalProvider>(context, listen: false);
+
+      functionalProvider.login(
+          userController.text.trim(), passwordController.text.trim());
+
+      String route =
+          (userController.text.trim() == 'user') ? '/user' : '/admin';
+      Navigator.pushReplacementNamed(context, route);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Credenciales incorrectas'),
+          duration: Duration(seconds: 3),
+        ),
+      );
+    }
   }
-}
-
-
 }

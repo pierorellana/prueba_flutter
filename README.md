@@ -4,9 +4,17 @@ A new Flutter project.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+La aplicación inicia con un pequeño splash donde luego redireccionará a una pantalla de login donde podra ingresar con dos usuarios:
 
-A few resources to get you started if this is your first Flutter project:
+-Credenciales Admin:
+
+Usuario: admin
+Contraseña: admin
+
+-Credenciales Usuario:
+
+Usuario: user
+Contraseña: user
 
 - [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
 - [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)

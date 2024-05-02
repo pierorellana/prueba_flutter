@@ -6,12 +6,14 @@ class CardWidget extends StatelessWidget {
   final String userName;
   final String userLastName;
   final String userEmail;
+  final VoidCallback onDelete;
 
   const CardWidget({
     Key? key,
     required this.userName,
     required this.userLastName,
     required this.userEmail,
+    required this.onDelete,
   }) : super(key: key);
 
   @override
@@ -62,11 +64,26 @@ class CardWidget extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             SizedBox(height: size.height * 0.015),
-            FilledButtonWidget(
-              color: AppTheme.secondaryColor,
-              textButtonColor: AppTheme.white,
-              text: 'Editar Usuario',
-              onPressed: () {},
+            Row(
+              children: [
+                Expanded(
+                  child: FilledButtonWidget(
+                    color: AppTheme.secondaryColor,
+                    textButtonColor: AppTheme.white,
+                    text: 'Editar Usuario',
+                    onPressed: () {},
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: FilledButtonWidget(
+                    color: AppTheme.secondaryColor,
+                    textButtonColor: AppTheme.white,
+                    text: 'Eliminar Usuario',
+                    onPressed: onDelete,
+                  ),
+                ),
+              ],
             ),
           ],
         ),

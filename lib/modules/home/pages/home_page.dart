@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:prueba_flutter/env/theme/app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,24 +17,37 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   TextEditingController controllerSearch = TextEditingController();
-  String? userName;
-  String? userLastName;
-  String? userEmail;
+  List<Map<String, String>> userList = [];
 
-  void navigateToRegisterPage() {
-    Navigator.push(
+  void navigateToRegisterPage() async {
+    final result = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const RegisterPage()),
     );
+    if (result != null) {
+      setState(() {
+        Map<String, dynamic> newUser = jsonDecode(result);
+        userList.add(newUser.cast<String, String>());
+      });
+    }
+  }
+
+  void deleteUserAndPrefs(int index) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userList.removeAt(index);
+      prefs.setString('user_list', jsonEncode(userList));
+    });
   }
 
   void getUserDataFromPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      userName = prefs.getString('user_name');
-      userLastName = prefs.getString('user_last_name');
-      userEmail = prefs.getString('user_email');
-    });
+    String? userListString = prefs.getString('user_list');
+    if (userListString != null && userListString.isNotEmpty) {
+      setState(() {
+        userList = List<Map<String, String>>.from(jsonDecode(userListString).map((item) => Map<String, String>.from(item)));
+      });
+    }
   }
 
   @override
@@ -63,13 +78,6 @@ class _HomePageState extends State<HomePage> {
                   text: 'Agregar Usuario',
                   onPressed: navigateToRegisterPage,
                 ),
-  
-                FilledButtonWidget(
-                  color: AppTheme.secondaryColor,
-                  textButtonColor: AppTheme.white,
-                  text: 'Eliminar Usuario',
-                  onPressed: () {},
-                ),
                 FilledButtonWidget(
                   color: AppTheme.secondaryColor,
                   textButtonColor: AppTheme.white,
@@ -91,21 +99,20 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
             const SizedBox(height: 20),
-             (userName != null && userLastName != null && userEmail != null)
-              ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Text("Usuarios Creados",
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 20),
-                    CardWidget(
-                      userName: userName!,
-                      userLastName: userLastName!,
-                      userEmail: userEmail!,
+            userList.isNotEmpty
+                ? SingleChildScrollView(
+                    child: Column(
+                      children: userList.map((user) {
+                        return CardWidget(
+                          userName: user['user_name']!,
+                          userLastName: user['user_last_name']!,
+                          userEmail: user['user_email']!,
+                          onDelete: () => deleteUserAndPrefs(userList.indexOf(user)),
+                        );
+                      }).toList(),
                     ),
-                  ],
-                )
-              : SizedBox(),
+                  )
+                : SizedBox(),
           ],
         ),
       ),

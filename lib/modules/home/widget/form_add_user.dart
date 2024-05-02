@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../env/theme/app_theme.dart';
@@ -19,30 +21,25 @@ class _FormAddUserWidgetState extends State<FormAddUserWidget> {
   TextEditingController lastNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   bool showPassword = false;
+  List<Map<String, String>> userList = [];
 
-   void saveUserData() async {
+  void saveUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    // Obtiene los datos del formulario
     String name = nameController.text;
     String lastName = lastNameController.text;
     String email = emailController.text;
 
+    Map<String, String> newUser = {
+      'user_name': name,
+      'user_last_name': lastName,
+      'user_email': email,
+    };
 
-    // Guarda los datos en las preferencias compartidas
-    await prefs.setString('user_name', name);
-    await prefs.setString('user_last_name', lastName);
-    await prefs.setString('user_email', email);
+    print(newUser);
 
-    // Muestra un mensaje de éxito 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Usuario registrado exitosamente'),
-        duration: Duration(seconds: 3),
-      ),
-    );
-
-    Navigator.pushReplacementNamed(context, '/admin');
-    
+    userList.add(newUser);
+    await prefs.setString('user_list', jsonEncode(userList));
+    Navigator.pop(context, jsonEncode(newUser));
   }
 
   @override

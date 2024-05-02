@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../env/theme/app_theme.dart';
-import '../../../../shared/provider/auth_provider.dart';
 import '../../../../shared/provider/functional_provider.dart';
 import '../../../../shared/widget/filled_button.dart';
 import '../../../../shared/widget/placeholder.dart';

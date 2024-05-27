@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appName = Environment().config?.appName ?? 'name app default';
+        //Comentario de prueba SonarQube
 
     return MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => FunctionalProvider())],
